@@ -2,6 +2,10 @@
 
 package coursera
 
+import (
+	"math/rand"
+)
+
 // Let r be return value of this function. Then 
 // all the values of xs in range [start, r) are 
 // strictly smaller than upper.
@@ -21,6 +25,47 @@ func moveDown(xs []int, lower int, start int, end int) int {
 	return i
 }
 
+func medianOfThree(xs []int) int {
+	l := len(xs)
+
+	i, j, k := rand.Intn(l), rand.Intn(l), rand.Intn(l)
+
+	var r int
+	if xs[i] < xs[j] {
+		if xs[j] < xs[k] {
+			r = j
+		} else {
+			if xs[i] < xs[k] {
+				r = k
+			} else {
+				r = i
+			}
+		}
+	} else {
+		if xs[i] < xs[k] {
+			r = i
+		} else {
+			if xs[j] < xs[k] {
+				r = k
+			} else {
+				r = j
+			}
+		}
+	}
+	return r
+}
+
+func InsertionSort(xs []int) {
+	for i := 1; i < len(xs); i++ {
+		j := i
+		v := xs[i]
+		for ; j > 0 && xs[j - 1] > v; j-- {
+			xs[j] = xs[j - 1]
+		}
+		xs[j] = v
+	}
+}
+
 // Quicksort partitioning with last element the pivot.
 // Let r be return value of this function. Then
 // all the values of xs in range [0, r) are smaller than
@@ -28,21 +73,10 @@ func moveDown(xs []int, lower int, start int, end int) int {
 // are bigger than xs[r]
 func partition(xs []int) int {
 	l := len(xs)
+	m := medianOfThree(xs)
 
-	if l == 0 || l == 1 {
-		return 0
-	}
-
-	if xs[0] > xs[l - 1] {
-		xs[0], xs[l - 1] = xs[l - 1], xs[0]
-	}
-
-	if l > 2 {
-		m := l / 2
-
-		if xs[m] > xs[l - 1] {
-			xs[m], xs[l - 1] = xs[l - 1], xs[m]
-		} 
+	if m != l - 1 {
+		xs[m], xs[l - 1] = xs[l - 1], xs[m]
 	}
 
 	v := xs[l - 1]
@@ -78,8 +112,12 @@ func QuickSort(xs []int) {
 		return
 	}
 
-	i := partition(xs)
+	if l <= 8 {
+		InsertionSort(xs)
+	} else {
+		i := partition(xs)
 
-	QuickSort(xs[0:i])
-	QuickSort(xs[i + 1: len(xs)])
+		QuickSort(xs[0:i])
+		QuickSort(xs[i + 1: len(xs)])
+	}
 }

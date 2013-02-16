@@ -47,3 +47,7 @@ func BenchmarkQuickSort(b *testing.B) {
 
     QuickSort(xs)
 }
+
+func TestInsertionSort(t *testing.T) {
+	sortAndCheck(t, []int{5, 2, 6, 3, 1, 4}, InsertionSort)
+}
